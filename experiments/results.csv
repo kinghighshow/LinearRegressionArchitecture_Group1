@@ -1,1 +1,3 @@
-experiment,feature,model,rmse,mae,r2
+Model,RMSE,MAE,R2,predictor,learning_rate,iterations,test_size
+From scratch,84209.01241376188,62990.86523840832,0.45885918904338463,median_income,0.01,1000,0.2
+Scikit-learn,84209.01241414454,62990.86530093761,0.45885918903846656,median_income,0.01,1000,0.2

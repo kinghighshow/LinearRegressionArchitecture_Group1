@@ -1,2 +1,4 @@
 data/raw/california_housing_apr_tablea2.csv
 .venv/
+.DS_Store/
+__pycache__

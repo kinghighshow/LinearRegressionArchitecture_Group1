@@ -1,1 +1,33 @@
-# Experiment configuration will be added in Part 3.
+# Experiment configuration for the Linear Regression Architecture Workshop.
+# Every path/parameter the pipeline needs lives here so nothing is
+# hard-coded inside src/. Update paths if your teammates' data files
+# land somewhere else once the repo is merged.
+
+data:
+  csv:
+    california: data/raw/california_housing.csv
+    toronto: data/raw/toronto_property_prices.csv
+
+api:
+  url: "https://data.ca.gov/api/action/datastore_search"
+  params:
+    resource_id: "fe505d9b-8c36-42ba-ba30-08bc4f34e022"
+    limit: 100
+  record_path: "result.records"
+
+database:
+  path: data/housing_data.sqlite
+  query: "SELECT * FROM california_housing;"
+
+modeling:
+  feature: median_income
+  target: median_house_value
+
+training:
+  test_size: 0.2
+  random_state: 42
+  learning_rate: 0.01
+  iterations: 1000
+
+experiment_tracking:
+  results_path: experiments/results.csv
