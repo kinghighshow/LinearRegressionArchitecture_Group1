@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../experiments"
+		},
+		{
+			"path": "../data"
+		},
+		{
+			"path": "../notebooks"
+		},
+		{
+			"path": "../src"
+		}
+	]
+}
