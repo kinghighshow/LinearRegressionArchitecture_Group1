@@ -1,7 +1,8 @@
-pandas
-numpy
-scikit-learn
-matplotlib
-requests
-pyyaml
-ipykernel
+  pandas
+  numpy
+  scikit-learn
+  matplotlib
+  pyyaml
+  joblib
+  psycopg[binary]
+  python-dotenv

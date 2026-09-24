@@ -21,12 +21,6 @@ except ImportError:  # allows running the module standalone
 
 
 class DataLoader:
-    """Loads housing data from CSV files, a web API, and a SQL database.
-
-    Each `load_*` method is independent and returns a plain DataFrame, so
-    it can be unit-tested or called on its own from a notebook cell.
-    """
-
     def __init__(self, config: Optional["ExperimentConfig"] = None):
         self.config = config
 

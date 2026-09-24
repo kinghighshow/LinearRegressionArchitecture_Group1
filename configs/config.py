@@ -1,3 +1,19 @@
+"""
+config.py
+---------
+Single, unified config loader for the whole repo. Both pipelines -
+the housing linear-regression workflow (data_loader/preprocessing/
+model/evaluation) and the robot failure-prediction workflow
+(data_extraction_analysis/data_preparation/model_selection/
+model_training/model_evaluation_validation/trained_ml_model) - read
+the same configs/experiment_config.yaml through this one class.
+
+Each pipeline's hyperparameters and results file are kept namespaced
+(`training` vs `robot_training`, `results_path` vs `robot_results_path`)
+so training the robot classifier can never accidentally pick up the
+housing regression's learning rate, and their experiment logs never
+land in the same CSV with mismatched columns.
+"""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -9,8 +25,6 @@ import yaml
 
 @dataclass
 class ExperimentConfig:
-    """Thin wrapper around the parsed YAML dict with convenience accessors."""
-
     raw: dict = field(default_factory=dict)
     source_path: Path | None = None
 
@@ -24,7 +38,6 @@ class ExperimentConfig:
         return cls(raw=data, source_path=path)
 
     def get(self, *keys: str, default: Any = None) -> Any:
-        """Safe nested lookup, e.g. config.get('training', 'learning_rate')."""
         node: Any = self.raw
         for key in keys:
             if not isinstance(node, dict) or key not in node:
@@ -32,7 +45,7 @@ class ExperimentConfig:
             node = node[key]
         return node
 
-    # ---- Convenience sections used across the pipeline -----------------
+    # ==== Housing linear-regression pipeline ============================
     @property
     def csv_paths(self) -> dict:
         return self.get("data", "csv", default={})
@@ -54,6 +67,13 @@ class ExperimentConfig:
         return self.get("modeling", "target", default="median_house_value")
 
     @property
+    def training(self) -> dict:
+        """Housing pipeline's hyperparameters (test_size, random_state,
+        learning_rate, iterations). Kept separate from robot_training so
+        the two models never share a learning rate."""
+        return self.get("training", default={})
+
+    @property
     def test_size(self) -> float:
         return self.get("training", "test_size", default=0.2)
 
@@ -70,10 +90,46 @@ class ExperimentConfig:
         return self.get("training", "iterations", default=1000)
 
     @property
-    def training(self) -> dict:
-        return self.get("training", default={})
+    def results_path(self) -> str:
+        """Housing pipeline's experiment log."""
+        return self.get("experiment_tracking", "results_path",
+                         default="experiments/housing_results.csv")
+
+    # ==== Robot failure-prediction pipeline ==============================
+    @property
+    def data(self) -> dict:
+        return self.get("data", default={})
 
     @property
-    def results_path(self) -> str:
-        return self.get("experiment_tracking", "results_path",
-                         default="experiments/results.csv")
+    def features(self) -> list[str]:
+        return self.get("features", "predictors",
+                         default=[f"Axis #{i}" for i in range(1, 9)])
+
+    @property
+    def labeling(self) -> dict:
+        return self.get("labeling", default={})
+
+    @property
+    def robot_training(self) -> dict:
+        """Robot pipeline's hyperparameters - deliberately separate from
+        `training` (the housing pipeline's), since logistic regression on
+        this feature set needs a different learning rate/iteration count
+        than the housing linear regression does."""
+        return self.get("robot_training", default={})
+
+    @property
+    def model(self) -> dict:
+        return self.get("model", default={})
+
+    @property
+    def artifact_path(self) -> str:
+        return self.get("model", "artifact_path",
+                         default="models/robot_failure_model.joblib")
+
+    @property
+    def robot_results_path(self) -> str:
+        """Robot pipeline's experiment log - a different file from the
+        housing pipeline's results_path, since the two log different
+        metric columns (RMSE/MAE/R2 vs. Accuracy/Precision/ROC-AUC)."""
+        return self.get("experiment_tracking", "robot_results_path",
+                         default="experiments/robot_results.csv")
