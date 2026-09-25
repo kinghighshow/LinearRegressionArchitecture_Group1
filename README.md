@@ -1,6 +1,24 @@
 # Linear Regression Architecture Workshop
 
+## Group Members and Responsibilities
+
+This project was completed collaboratively by a team of four, following the workshop's four sequential parts. Each part depended on the completion of the previous one.
+
+| Group Member | Role | Responsibilities |
+|---|---|---|
+| **Eche Oji (9078881)** | Data Sourcing & Exploratory Data Analysis | Collected California and Ontario housing price data from a CSV source, a housing/open-data API, and a relational database; built `notebooks/EDA.ipynb` demonstrating all three sources; performed initial EDA (`.head()`, `.info()`, `.describe()`, distributions, missing values) and identified the target variable and single predictor for regression. |
+| **Antonio Sainz (9072844)** | Preprocessing & Linear Regression | Preprocessed the selected dataset (missing values, normalization, train/test split); implemented univariate linear regression from scratch (hypothesis, MSE cost, gradient descent) and with `scikit-learn`; evaluated both with RMSE, MAE, and R², and produced the regression visualizations in `notebooks/linear_regression.ipynb`. |
+| **Sultan Atanda (9114837)** | Modularization & MLOps Configuration | Converted the working data-loading and regression code into modular, config-driven source files (`src/data_loader.py`, `preprocessing.py`, `model.py`, `evaluation.py`); built `configs/experiment_config.yaml`; established the full project structure and connected all modules into a single reproducible pipeline. |
+| **John Buni (9115726)** | Experiment Tracking, Documentation & Final Integration | Implemented experiment logging to `experiments/results.csv`; wrote `requirements.txt` and `README.md`; updated `RobotPM_MLOps.ipynb` with the project's architectural changes; ran final end-to-end testing across the whole repository before submission. |
+
+### Team Workflow
+
+The four parts form a single sequential pipeline, each stage depending on the one before it:
+
+**Data Sourcing & EDA → Preprocessing & Regression Modeling → Modularization & MLOps Configuration → Experiment Tracking, Documentation & Final Integration**
+
 ## Overview
+
 
 This project implements a reproducible univariate linear regression workflow for housing price analysis using California and Ontario housing data.
 
